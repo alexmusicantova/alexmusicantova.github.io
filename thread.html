@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+<link rel="mask-icon" type="" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+
+
+  <title>CodePen - Project management UX</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://www.brookes.ac.uk/FrontendResources/css/site.css'>
+  
+<style>
+.concepts {
+      min-width: 1140px;
+    }
+    .lifecycle {
+      float: left;
+      position: relative;
+      padding: 0;
+      margin-bottom: 4em;
+      -moz-border-radius:    10px;
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+      border: 5px white solid;
+      width: 16.5%;
+      margin-bottom: 0;
+      min-height: 650px;
+    }
+    .lifecycle h2 {
+      padding: 0.5em;
+      font-size: 18px;
+      border: 1px solid #9eab05;
+      -moz-border-radius: 0 0 10px 10px;
+      -webkit-border-radius: 0 0 10px 10px;
+      border-radius: 0 0 10px 10px;
+      background: #9eab05;
+      color: white;
+      margin-bottom: 40px;
+    }
+    .lifecycle a:hover h2,
+    .lifecycle a:active h2 {
+      background: white;
+      color: #9eab05;
+    }
+    .bg-lime-30 {  background-color: #e1e49c;}
+    .bg-lime-40 {  background-color: #d1d76a;}
+
+    .lifecycle a {  color: #9eab05;}
+    .lifecycle a .icon {
+      color: #5D6503;
+      font-size: 16px;
+   }
+   .lifecycle a:hover,
+   .lifecycle a:hover .icon {
+      color: #FF9F05;
+   }
+   .lifecycle h3 a {
+    color: white;
+   }
+   .lifecycle h3 a:hover {
+    color: black;
+    text-decoration: underline;
+   }
+    .gateway {
+      z-index: 1;
+      position: absolute;
+      background-color: #f49103;
+      color: white;
+      padding: 1em;
+      text-align: center;
+      padding: 1em;
+      width: 120px;
+      height: 100px;
+      right: -60px;
+      bottom: 30px;
+    }
+    .gateway:after {
+      z-index: 2;
+      content: "";
+      position: absolute;
+      left: 100%;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-top: 50px solid rgba(0, 0, 0, 0);
+      border-left: 36px solid #f49103;
+      border-bottom: 50px solid rgba(0, 0, 0, 0);
+    }
+
+    .gateway a { color: white;}
+    .gateway a:hover { color: black;}
+    .overlap {
+      position: absolute;
+      top: 0;
+      z-index: 1;
+      right: -40px;
+    }
+    .overlap .glyphicon,
+    .glyphicon-arrow-down {
+      font-size: 26px;
+      padding: 5px;
+      font-size: 26px;
+      color: #5D6503;
+      background: #FFF;
+      border-radius: 20px;
+      border: 1px solid #5D6503;
+      margin-bottom: 10px;
+    }
+    .glyphicon-arrow-down {
+      margin: 10px 20px;
+    }
+
+    .docs {
+      border: 1px solid #9eab05;
+      position: relative;
+      padding: 0;
+      margin: 0 10px 5px 10px;
+      background: #fff;
+      -moz-border-radius: 0 0 10px 10px;
+      -webkit-border-radius: 0 0 10px 10px;
+      border-radius: 0 0 10px 10px;
+    }
+    .docs h3 {
+      font-size: 16px;
+      padding: 0.5em;
+      background: #9eab05;
+      color: #fff;
+    }
+    .docs h3 a .icon {
+      color: white;
+    }
+    .docs::after {
+      content: "";
+      display: table;
+      clear: both;
+      padding: 10px;
+    }
+    .docs p {
+      font-size: 14px;
+      padding: 10px;
+    }
+    .docs a {
+
+    }
+    .docs.risk {
+      margin-top: 110px;
+    }
+    .bg-blue-20 {
+      background-color: #CDE9EE;
+    }
+    .cols-4-right {
+      margin-left: 500px;
+    }
+    .cols-5-right {
+      margin-left: 250px;
+    }
+    .lifecycle-horizontal {
+      padding: 1em;
+      -moz-border-radius: 10px;
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+      border: 5px #FFF solid;
+      clear: both;
+    }
+
+    .benefits {
+      /*margin-bottom: 1em;*/
+    }
+.lifecycle-horizontal h2 {
+  width: 20%;
+  padding: 0.5em;
+  font-size: 18px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: #0572AB;
+  color: #FFF;
+}
+.advactive {
+  background-color: #000;
+}
+.toggle-button {
+  background-color: white;
+  margin: 5px 0; border-radius: 20px;
+  border: 2px solid #D0D0D0;
+  height: 24px; cursor: pointer;
+  width: 50px; position: relative;
+  display: inline-block;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+.toggle-button button {
+  cursor: pointer;
+  outline: 0;
+  display:block;
+  position: absolute;
+  left: 0;
+  top: 0; border-radius: 100%;
+  width: 30px; height: 30px;
+  background-color: white;
+  loat: left;
+  margin: -3px 0 0 -3px;
+  border: 2px solid #D0D0D0;
+  transition: left 0.3s;
+}
+.toggle-button-selected {
+  background-color: #9eab05;
+  border: 2px solid #9eab05;
+}
+.toggle-button-selected button {
+  left: 26px;
+  top: 0;
+  margin: 0;
+  border: none;
+  width: 24px;
+  height: 24px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div class="concepts">
+    <div class="choices">
+        Complex project
+        <div class="toggle-button">
+            <button></button>
+        </div>
+    </div>
+    <div class="bg-lime-20 rounded lifecycle">
+        <a href="/Staff/VPO/Project-management/Project-toolkit/Stages/Stage-1--concept/">
+            <h2>1. Concept</h2>        </a>
+        <div class="docs brief">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Project-brief/"  title="Information about the Project Brief">Project Brief</a>
+                <a href="/Documents/VPO/Template-project-brief-PDF/"  title="Download the Project Brief"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>                                                   </p>
+            <div class="overlap">            <span class="glyphicon glyphicon-arrow-right"  aria-hidden="true"></span>          </div>        </div>
+        <div class="gateway">
+            <a href="/Staff/VPO/Project-management/Project-toolkit/Gateways/Gateway-1--strategic-alignment/"><strong>Gateway 1:</strong> Strategic alignment</a>    </div>    </div>
+    <div class="bg-lime-30 rounded lifecycle">
+        <a href="/Staff/VPO/Project-management/Project-toolkit/Stages/Stage-2--definition/">
+            <h2>2. Definition</h2>        </a>
+        <div class="docs businesscase">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Business-case/"  title="Information about the Business Case">Business Case</a>
+                <a href="#"  title="Download the Business Case"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>
+                         </p>
+            <div class="overlap">          <span class="glyphicon glyphicon-arrow-right"  aria-hidden="true"></span>        </div>
+        </div>
+
+        <div class="docs tor">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Terms-of-reference/"  title="Information about the Project Board Appointments &amp; Terms of Reference (ToR)">Project Board Appointments &amp; Terms of Reference (ToR)</a>
+                <a href="#"  title="Download the Project Board Appointments &amp; Terms of Reference (ToR)"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>
+                         </p>
+            <div class="overlap">          <span class="glyphicon glyphicon-arrow-right"  aria-hidden="true"></span>        </div>
+        </div>
+
+        <div class="gateway">
+            <a href="/Staff/VPO/Project-management/Project-toolkit/Gateways/Gateway-2--investment-justification/"><strong>Gateway 2:</strong> Investment justification</a>
+        </div>
+    </div>
+
+    <div class="bg-lime-40 rounded lifecycle">
+        <a href="/Staff/VPO/Project-management/Project-toolkit/Stages/Stage-3--planning/">
+            <h2>3. Planning</h2>        </a>
+        <div class="docs projectinitiation">
+            <h3><a href="/Staff/VPO/Project-management/Project-toolkit/Project-initiation-document/" title="Information about the Project Initiation Document">Project Initiation Document <span class="glyphicon glyphicon-save icon" aria-hidden="true"></span></a> </h3>
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Comms-plan/"  title="Download the Comms plan">Comms Plan <span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>
+                <br/>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Quality-plan/"  title="Download the Quality plan">Quality Plan <span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>
+
+                <br/>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Stakeholder-mapping/"  title="Download the Stakeholder mapping">Stakeholder Mapping <span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>                 </p>
+            <div class="overlap">          <span class="glyphicon glyphicon-arrow-right"  aria-hidden="true"></span>        </div>    </div>
+        <div class="docs projectplan">
+            <h3><a href="/Staff/VPO/Project-management/Project-toolkit/Project-plan/" title="Information about the Project Plan">Project Plan  <span class="glyphicon glyphicon-save icon" aria-hidden="true"></span></a> </h3>
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Timeline/"  title="Download the Timeline">Timeline <span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>
+                <br/>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Resource-plan/"  title="Download the Resource plan">Resource Plan <span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>                                            </p>
+            <div class="overlap">              <span class="glyphicon glyphicon-arrow-right"  aria-hidden="true"></span>            </div>          </div>
+        <div class="docs advanced">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Stage-plan/"  title="Information about the Stage Plan">Stage Plan</a>
+                <a href="#"  title="Download the Stage Plan"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>            </a>               </p>        </div>
+        <div class="gateway">
+            <a href="/Staff/VPO/Project-management/Project-toolkit/Gateways/Gateway-3--initiation/"><strong>Gateway 3:</strong> Initiation</a>        </div>    </div>
+    <div class="bg-lime-60 rounded lifecycle">
+        <a href="/Staff/VPO/Project-management/Project-toolkit/Stages/Stage-4--delivery/">
+            <h2>4. Delivery</h2>        </a>
+        <div class="docs advanced">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Change-request/"  title="Information about the Change Request">Change Request</a>
+                <a href="#"  title="Download the Change Request"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>            </a>                      </p>        </div>
+        <div class="docs advanced">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Issue-register/"  title="Information about the Issue Register">Issue Register</a>
+                <a href="#"  title="Download the Issue Register"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>            </a>         </p>        </div>
+        <div class="docs highlight">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Highlight-report/"  title="Information about the Highlight Report">Highlight Report</a>
+                <a href="#"  title="Download the Highlight Report"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>                                               </p>
+            <div class="overlap">          <span class="glyphicon glyphicon-arrow-right"  aria-hidden="true"></span>        </div>    </div>
+        <div class="docs risk">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/Risk-register/"  title="Information about the Risk Register">Risk Register</a>
+                <a href="#"  title="Download the Risk Register"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>                                                              </p>
+            <div class="overlap">          <span class="glyphicon glyphicon-arrow-right"  aria-hidden="true"></span>        </div>    </div>
+        <div class="docs advanced">
+            <p>
+                <a href="/Staff/VPO/Project-management/Project-toolkit/End-stage-report/"  title="Information about the End Stage Report">End Stage Report</a>
+                <a href="#"  title="Download the End Stage Report"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>            </a>
+                 </p>        </div>
+
+        <div class="gateway">
+            <a href="/Staff/VPO/Project-management/Project-toolkit/Gateways/Gateway-4--readiness-for-service/"><strong>Gateway 4:</strong> Readiness for service</a>    </div>   </div>
+    <div class="bg-lime rounded lifecycle">
+        <a href="/Staff/VPO/project-management/Project-toolkit/Stages/Stage-5--handover-and-close/">
+            <h2>5. Handover &amp; close</h2>        </a>
+        <div class="docs end">
+            <h3><a href="/Staff/VPO/Project-management/Project-toolkit/End-project-report/" title="Info about End Project Report">End Project Report</a></h3>
+            <p>
+            <a href="/Staff/VPO/Project-management/Project-toolkit/Lessons-learned/" title="Info about the Lessons learned">Lessons Learned</a> <a href="/Staff/VPO/Project-management/Project-toolkit/"  title="Download  the Lessons learned"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>
+
+            <br/>
+            <a href="/Staff/VPO/Project-management/Project-toolkit/Benefits-management-plan/" title="Info about the Benefits management plan">Benefits Management Plan</a> <a href="#" title="Download the Benefits management plan"><span class="glyphicon glyphicon-save icon"  aria-hidden="true"></span>                </a>
+  </p>    </div>
+        <div class="gateway">
+            <a href="/Staff/VPO/Project-management/Project-toolkit/Gateways/Gateway-5--stand-down/"><strong>Gateway 5:</strong> Stand down</a>        </div>    </div>
+    <div class="bg-blue-20 rounded lifecycle">    </div>
+</div>
+<!--// end concepts -->
+<!-- <div class="cols-4-right lifecycle-horizontal bg-lime-20">    <h2>NNN</h2>  </div>  -->
+<!-- benefits : starts at Stage 2 -->
+<div class="benefits lifecycle-horizontal cols-5-right bg-blue-20">
+    <h2>Benefits realisation</h2>
+</div>
+<!-- // end benefits -->
+<!-- Systems Development Lifecycle : starts at Stage 3-->
+<div class="sdl lifecycle-horizontal cols-4-right bg-blue-20">
+    <h2>Systems Development Lifecycle</h2>
+</div>
+<!-- // end Systems Development Lifecycle -->
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
+      <script id="rendered-js" >
+$(document).ready(function () {
+  $(".advanced").hide();
+  $(document).on('click', '.toggle-button', function () {
+    $(this).toggleClass('toggle-button-selected');
+    $(".advanced").toggle();
+  });
+});
+//# sourceURL=pen.js
+    </script>
+
+  
+
+</body>
+
+</html>
+ 

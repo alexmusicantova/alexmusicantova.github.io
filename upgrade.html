@@ -1,0 +1,944 @@
+
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  
+  <title>Kanban Task</title>
+  
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/riktar/jkanban/dist/jkanban.min.css'>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/perfect-scrollbar@1.4.0/css/perfect-scrollbar.min.css'>
+  
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#dev-float {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 10px;
+  background: rgba(128, 128, 128, 0.5);
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.page .header {
+  background: #e7e7e7;
+  border-bottom: 1px solid #ddd;
+  padding: 4px 10px 5px;
+}
+.page .main {
+  flex-grow: 1;
+  height: 0;
+}
+.page .footer {
+  background: #e7e7e7;
+  border-top: 1px solid #ddd;
+  padding: 4px 10px 5px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.meta-tasks-wrapper {
+  height: 100%;
+  position: relative;
+}
+.meta-tasks-wrapper::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  width: 5px;
+  background: linear-gradient(to left, transparent, #fff 66%);
+  z-index: 1;
+  pointer-events: none;
+}
+.meta-tasks-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  width: 5px;
+  background: linear-gradient(to right, transparent, #fff 66%);
+  pointer-events: none;
+}
+
+.meta-tasks {
+  height: 100%;
+  padding: 15px 0;
+  position: relative;
+  /*
+  THEME
+  */
+}
+.meta-tasks .kanban-board {
+  overflow-y: hidden;
+}
+.meta-tasks .kanban-board footer {
+  position: relative;
+}
+.meta-tasks .kanban-board footer a {
+  display: block;
+  padding: 10px 15px;
+  color: #666;
+  text-decoration: none;
+}
+.meta-tasks .kanban-board footer a:hover {
+  color: #333;
+  background: rgba(0, 0, 0, 0.1);
+}
+.meta-tasks .kanban-board footer a:active {
+  background: rgba(0, 0, 0, 0.2);
+}
+.meta-tasks .kanban-board footer::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(rgba(226, 228, 230, 0), #E2E4E6 66%);
+  pointer-events: none;
+}
+.meta-tasks .kanban-board-header {
+  position: relative;
+}
+.meta-tasks .kanban-board-header::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(to top, rgba(226, 228, 230, 0), #E2E4E6 66%);
+  pointer-events: none;
+  z-index: 1;
+}
+.meta-tasks .kanban-board-header .kanban-title-board {
+  display: flex;
+  flex-direction: row;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.3);
+}
+.meta-tasks .kanban-board-header .kanban-title-board .board-title {
+  flex-grow: 1;
+}
+.meta-tasks .kanban-board-header .kanban-title-board .board-actions {
+  margin-left: auto;
+  margin-top: -5px;
+}
+.meta-tasks .kanban-board-header .kanban-title-board .board-actions .action {
+  background: none;
+  color: rgba(0, 0, 0, 0.4);
+  border: none;
+  border-radius: 4px;
+}
+.meta-tasks .kanban-board-header .kanban-title-board .board-actions .action:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 0.6);
+}
+.meta-tasks .kanban-board-header .kanban-title-board .board-actions .action:active {
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 0.8);
+}
+.meta-tasks .kanban-item {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
+.meta-tasks .kanban-item:hover {
+  cursor: pointer;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.25), 0 3px 6px rgba(0, 0, 0, 0.22);
+}
+.meta-tasks .kanban-item:hover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: red;
+}
+.meta-tasks .kanban-item:hover .card-actions {
+  display: block;
+  background: rgba(255, 255, 255, 0.9);
+  padding-left: 5px;
+}
+.meta-tasks .kanban-item:hover .card-actions .action {
+  font-size: 12px;
+}
+.meta-tasks .kanban-item:hover .card-title {
+  max-height: unset;
+}
+.meta-tasks .kanban-item .card-title {
+  max-height: 3.8em;
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+.meta-tasks .kanban-item .card-title:last-child {
+  margin-bottom: 0;
+}
+.meta-tasks .kanban-item .card-actions {
+  margin-left: auto;
+  text-align: right;
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 10px;
+  right: 10px;
+}
+.meta-tasks .kanban-item .card-actions .action {
+  background: none;
+  color: rgba(0, 0, 0, 0.4);
+  border: none;
+  border-radius: 4px;
+  padding: 1px 6px;
+  display: inline-block;
+}
+.meta-tasks .kanban-item .card-actions .action:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 0.6);
+}
+.meta-tasks .kanban-item .card-actions .action:active {
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(0, 0, 0, 0.8);
+}
+.meta-tasks .kanban-item .card-tags {
+  margin-bottom: -10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: linear-gradient(to bottom, transparent, #fff 15%);
+  position: relative;
+  font-size: 14px;
+  line-height: 20px;
+}
+.meta-tasks .kanban-item .card-tags .badge {
+  font-size: 12px;
+  line-height: 14px;
+}
+.meta-tasks .kanban-container {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.meta-tasks .kanban-container .kanban-board {
+  float: none;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  border-radius: 4px;
+}
+.meta-tasks .kanban-container .kanban-board .kanban-drag {
+  overflow-y: auto;
+  min-height: 50px;
+  position: relative;
+  padding: 0 15px;
+}
+.meta-tasks .kanban-container .kanban-board .kanban-drag .ps__rail-x {
+  display: none !important;
+}
+.meta-tasks .kanban-container .kanban-board .kanban-drag .ps__rail-y {
+  z-index: 1;
+  opacity: 1;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.1);
+  width: 7px;
+  right: 4px !important;
+}
+.meta-tasks .kanban-container .kanban-board .kanban-drag .ps__rail-y .ps__thumb-y {
+  right: 0;
+  width: 100%;
+}
+.meta-tasks .card-tags > *:not(:last-child) {
+  margin-right: 4px;
+  font-weight: normal;
+}
+.meta-tasks .kanban-board-header .board-title {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.meta-tasks .kanban-board-header.success {
+  background: #00B961;
+}
+.meta-tasks .kanban-board-header.success + .kanban-drag .kanban-item:hover::before {
+  background: #00B961;
+}
+.meta-tasks .kanban-board-header.info {
+  background: #2A92BF;
+}
+.meta-tasks .kanban-board-header.info + .kanban-drag .kanban-item:hover::before {
+  background: #2A92BF;
+}
+.meta-tasks .kanban-board-header.warning {
+  background: #F4CE46;
+}
+.meta-tasks .kanban-board-header.warning + .kanban-drag .kanban-item:hover::before {
+  background: #F4CE46;
+}
+.meta-tasks .kanban-board-header.error {
+  background: #FB7D44;
+}
+.meta-tasks .kanban-board-header.error + .kanban-drag .kanban-item:hover::before {
+  background: #FB7D44;
+}
+.meta-tasks .kanban-board-header.new {
+  background: #f1e5e5;
+  color: #c83131;
+}
+.meta-tasks .kanban-board-header.new + .kanban-drag .kanban-item:hover::before {
+  background: #c83131;
+}
+
+.kanban-item.dragging .card-actions,
+.kanban-item.dragging:hover .card-actions {
+  display: none !important;
+}
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+  <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+
+</head>
+
+<body translate="no" >
+  <div class="page">
+  <div class="header">
+    MetaTasks Kanban Board
+  </div>
+  <div class="main">
+    
+    <!-- meta-tasks component -->
+    <div class="meta-tasks-wrapper">
+      <div id="myKanban" class="meta-tasks"></div>
+    </div>
+    
+    <div id="dev-float">
+      <!-- Button trigger modal -->
+      <button type="button" data-toggle="modal" data-target="#cardModal">
+        Launch modal
+      </button>
+    </div>
+  </div>
+  <div class="footer">
+    Made with <i class="fas fa-heart text-danger"></i> by <em>leon</em>
+  </div>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cardModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre id="debug-modal-model"></pre>
+        <form>
+          <div class="form-group">
+            <label for="card-description-input">Description</label>
+            <textarea class="form-control" id="card-description-input" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+<!--       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js'></script>
+<script src='https://cdn.jsdelivr.net/gh/riktar/jkanban/dist/jkanban.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js'></script>
+<script src='https://use.fontawesome.com/releases/v5.5.0/js/all.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/perfect-scrollbar@1.4.0/dist/perfect-scrollbar.min.js'></script>
+      <script id="rendered-js" >
+"use strict";
+class FakeListAPI {
+    constructor() {
+        this.lists = [];
+        this.loadLists();
+    }
+    // emulate async API call - Gets all lists.
+    getLists() {
+        return Promise.resolve(_.cloneDeep(this.lists));
+    }
+    // emulate async API call - Gets single full card.
+    getCard(id) {
+        for (let l = 0; l < this.lists.length; l++) {
+            let list = this.lists[l];
+            for (let i = 0; i < list.cards.length; i++) {
+                let card = list.cards[i];
+                if (card.id === id) {
+                    return Promise.resolve(card);
+                }
+            }
+        }
+        return Promise.reject('ERROR 404');
+    }
+    loadLists() {
+        let order = 65535;
+        this.lists = [
+            {
+                id: '_new',
+                title: 'Inbox',
+                cards: [
+                    {
+                        id: 'bitbucket://repositories/example/pp-ui/issues/132',
+                        title: 'Task keeps crashing!',
+                        order: ++order,
+                        provider: 'bitbucket',
+                        type: 'bug',
+                        severity: 'high',
+                        prefix: 'pp-ui',
+                        editUrl: 'https://bitbucket.org/example/pp-ui/issues/132',
+                    },
+                    {
+                        id: 'slack://example/ABCDEFG12/j12345678901234567',
+                        title: 'Message!',
+                        order: ++order,
+                        provider: 'slack',
+                        type: 'comment-private',
+                        prefix: '#mgmt-im',
+                        viewUrl: 'https://example.slack.com/archives/ABCDEFG12/j12345678901234567',
+                        tags: ['tag n', 'tag n+1', 'tag n+2'],
+                        isWatching: true,
+                        hasComments: true,
+                        dueDate: new Date(),
+                    },
+                    {
+                        id: 'zendesk://example/tickets/1234567890',
+                        title: 'This ticket has a very long description which should wrap to at least two lines for demo purposes.',
+                        order: ++order,
+                        provider: 'zendesk',
+                        type: 'ticket',
+                        prefix: 'gdpr@',
+                        editUrl: 'https://example.zendesk.com/tickets/1234567890',
+                        tags: ['urgent', 'unassigned', 'tag n', 'tag n+1', 'tag n+2'],
+                        hasDescription: true,
+                    },
+                    {
+                        id: 'gdrive://example.com/d/1234567890/',
+                        title: 'New folder request for "Eyes" by @JDoe.',
+                        order: ++order,
+                        provider: 'google-drive',
+                        type: 'folder',
+                        viewUrl: 'https://drive.google.com/d/1234567890',
+                    },
+                    {
+                        id: 'gdrive://example.com/d/1234567890/',
+                        title: 'Check back in 3 days.',
+                        order: ++order,
+                        provider: 'trello',
+                        type: 'card',
+                        prefix: 'lna-cases',
+                        viewUrl: 'https://drive.google.com/d/1234567890',
+                    },
+                    {
+                        id: 'gcal://example.com/cal/12345/event/1234567890/',
+                        title: 'Management Meeting (part 3)',
+                        order: ++order,
+                        provider: 'calendar',
+                        type: 'calendar-event',
+                        prefix: 'Work Calendar',
+                        viewUrl: 'https://calendar.google.com/c/12345/event/1234567890',
+                    },
+                    {
+                        id: 'gkeep://keep/12345/note/1234567890',
+                        title: 'Notes from Site',
+                        order: ++order,
+                        provider: 'google-keep',
+                        type: 'note',
+                        viewUrl: 'https://keep.google.com/keep/12345/note/1234567890',
+                    },
+                    {
+                        id: 'imap://gmail.com/jdoe@example.com/#inbox/some-long-mail-id',
+                        title: 'Hello from Nigeria!',
+                        order: ++order,
+                        provider: 'email',
+                        type: 'message',
+                        prefix: 'Inbox',
+                        viewUrl: 'https://mail.google.com/mail/#inbox/some-long-mail-id',
+                    }
+                ]
+            },
+            {
+                id: '_todo',
+                title: 'To Do',
+                cards: [
+                    {
+                        id: '_test_delete',
+                        title: 'Try drag this (Look the console)',
+                        order: ++order,
+                    },
+                    {
+                        id: _.uniqueId('card-'),
+                        title: 'Try Click This!',
+                        order: ++order,
+                    },
+                    ...(_.times(10, i => ({
+                        id: `dummy-${i}`,
+                        title: `Dummy card title ${i}`,
+                        order: ++order,
+                    }))),
+                ]
+            },
+            {
+                id: '_working',
+                title: 'Working',
+                cards: [
+                    {
+                        id: _.uniqueId('card-'),
+                        "title": "Do Something!",
+                        order: ++order,
+                    },
+                    {
+                        id: _.uniqueId('card-'),
+                        "title": "Run?",
+                        order: ++order,
+                    }
+                ]
+            },
+            {
+                id: '_done',
+                title: 'Done',
+                cards: [
+                    {
+                        id: _.uniqueId('card-'),
+                        title: 'All right',
+                        order: ++order,
+                    },
+                    {
+                        id: _.uniqueId('card-'),
+                        title: 'Ok!',
+                        order: ++order,
+                    }
+                ]
+            },
+        ];
+    }
+    static genCardOrder(prev, next) {
+        return (prev && next) ? (prev + next) / 2 // isBetween
+            : prev ? Math.ceil(prev + 65535.5) // isLastCard
+                : prev ? next / 2 // isFirstCard
+                    : 65535;
+    }
+}
+class Demo {
+    constructor() {
+        this.listApi = new FakeListAPI(); // usually injected or set in constructor
+    }
+    run() {
+        this.listApi.getLists().then((lists) => {
+            this.lists = lists;
+            const boards = lists
+                .map(l => this.listToKanbanBoard(l))
+                .map(b => this.processBoard(b));
+            const kanbanTest = this.initKanban(boards, '#myKanban');
+            $('.meta-tasks').each((i, el) => new PerfectScrollbar(el, { useBothWheelAxes: true }));
+            this.setupUI(kanbanTest);
+        });
+    }
+    listToKanbanBoard(list) {
+        const asIsProps = ['id', 'title'];
+        const board = _.pick(list, asIsProps);
+        board.item = list.cards.map(c => this.cardToKanbanCard(c));
+        board.meta = _.omitBy(list, asIsProps.concat(['cards']));
+        return board;
+    }
+    cardToKanbanCard(list) {
+        const asIsProps = ['id', 'title'];
+        const card = _.pick(list, asIsProps);
+        card.meta = _.omitBy(list, asIsProps);
+        return card;
+    }
+    processBoard(board) {
+        // custom boards
+        if (board.id === '_new') {
+            board['class'] = 'new';
+            board.meta = {
+                icon: 'fas fa-inbox',
+                boardActions: [
+                    { icon: 'fas fa-sync', label: 'Synchronize' },
+                    { icon: 'fas fa-filter', label: 'Filter' },
+                    { icon: 'fas fa-sort-amount-down', label: 'Sort' },
+                    { icon: 'fas fa-ellipsis-h', label: 'List Actions' },
+                ],
+            };
+        }
+        else if (board.id === '_todo') {
+            board['class'] = 'info,good';
+            board.dragTo = ['_working'];
+            board.meta = {
+                icon: 'far fa-calendar-check',
+            };
+        }
+        else if (board.id === '_working') {
+            board['class'] = 'warning';
+            board.meta = {
+                icon: 'fas fa-cogs',
+            };
+        }
+        else if (board.id === '_done') {
+            board['class'] = 'success';
+            board.dragTo = ['_working'];
+            board.meta = {
+                icon: 'fas fa-check-double',
+            };
+        }
+        // construct board dom html
+        let $title = $(`<div class="board-title"></div>`).text(board.title);
+        if (board.meta && board.meta.icon) {
+            $title.prepend(`<i class="${_.escape(board.meta.icon)} fa-fw"></i> `);
+        }
+        board.title = $title[0].outerHTML;
+        if (board.meta.boardActions && board.meta.boardActions.length) {
+            const $boardActions = $('<div class="board-actions"></div>');
+            board.meta.boardActions.map(ba => {
+                const $button = $('<button class="action"></button>');
+                if (ba.icon) {
+                    const $icon = $(`<i class="${_.escape(ba.icon)} fa-fw"></i>`);
+                    $button.append($icon);
+                }
+                if (ba.label) {
+                    $button.attr('title', ba.label);
+                }
+                return $button;
+            }).forEach($button => {
+                $boardActions.append($button);
+            });
+            board.title += $boardActions[0].outerHTML;
+        }
+        if (board.item && board.item.length) {
+            board.item.forEach(card => {
+                card.parentId = board.id;
+                this.processCard(card);
+            });
+        }
+        return board;
+    }
+    processCard(card) {
+        let $title = $(`<div class="card-title"></div>`);
+        const genIcon = (iconClass, title) => {
+            return `<i class="${_.escape(iconClass)} fa-fw"${title ? ` title="${_.escape(title)}"` : ''}></i>`;
+        };
+        const genAction = (iconClass, title, href, label) => {
+            const $button = $(href ? '<a target="_blank"></a>' : '<button></button>');
+            if (href) {
+                $button.attr('href', href);
+            }
+            $button.addClass('action');
+            const $icon = $(`<i class="${_.escape(iconClass)} fa-fw"></i>`);
+            $button.append($icon);
+            if (label) {
+                $button.append(label);
+            }
+            if (title) {
+                $button.attr('title', title);
+            }
+            return $button;
+        };
+        const $cardActions = $('<div class="card-actions"></div>');
+        if (card.meta) {
+            if (card.meta.provider) {
+                switch (card.meta.provider) {
+                    case 'bitbucket':
+                        $title.append(genIcon('fab fa-bitbucket text-info', 'BitBucket Issue'));
+                        break;
+                    case 'slack':
+                        $title.append(genIcon('fab fa-slack text-warning', 'Slack Chat'));
+                        break;
+                    case 'zendesk':
+                        $title.append(genIcon('fas fa-life-ring text-success', 'Zendesk Ticket'));
+                        break;
+                    case 'google-drive':
+                        $title.append(genIcon('fab fa-google-drive text-info', 'Google Drive'));
+                        break;
+                    case 'trello':
+                        $title.append(genIcon('fab fa-trello text-info', 'Trello'));
+                        break;
+                    case 'bitbucket':
+                        $title.append(genIcon('fab fa-bitbucket text-info', 'BitBucket Issue'));
+                        break;
+                    case 'calendar':
+                        $title.append(genIcon('far fa-calendar', 'Calendar'));
+                        break;
+                    case 'google-keep':
+                        $title.append(genIcon('fas fa-sticky-note text-warning', 'Google Keep'));
+                        break;
+                    case 'bitbucket':
+                        $title.append(genIcon('fab fa-bitbucket text-info', 'BitBucket Issue'));
+                        break;
+                    case 'email':
+                        $title.append(genIcon('fas fa-at text-danger', 'Email'));
+                        break;
+                }
+            }
+            if (card.meta.type) {
+                switch (card.meta.type) {
+                    case 'bug':
+                        $title.append(genIcon('fas fa-bug text-danger', 'Bug'));
+                        break;
+                    case 'comment':
+                        $title.append(genIcon('fas fa-comment text-muted', 'Comment'));
+                        break;
+                    case 'comment-private':
+                        $title.append(genIcon('fas fa-comment text-danger', 'Private Comment'));
+                        break;
+                    case 'comment-public':
+                        $title.append(genIcon('fas fa-comment text-info', 'Public Comment'));
+                        break;
+                    case 'ticket':
+                        $title.append(genIcon('fas fa-comment text-muted', 'Ticket'));
+                        break;
+                    case 'notification':
+                        $title.append(genIcon('fas fa-exclamation-circle text-muted', 'Notification'));
+                        break;
+                    case 'card':
+                        $title.append(genIcon('far fa-clone text-muted', 'Card'));
+                        break;
+                    case 'board':
+                        $title.append(genIcon('far fa-columns text-muted', 'Board'));
+                        break;
+                    case 'folder':
+                        $title.append(genIcon('fas fa-folder text-muted', 'Folder'));
+                        break;
+                    case 'calendar-event':
+                        $title.append(genIcon('fas fa-calendar-alt text-muted', 'Event'));
+                        break;
+                    case 'note':
+                        $title.append(genIcon('far fa-sticky-note text-muted', 'Note'));
+                        break;
+                    case 'message':
+                        $title.append(genIcon('far fa-envelope text-muted', 'Message'));
+                        break;
+                }
+            }
+            if (card.meta.prefix) {
+                $title.append(`<strong>[${_.escape(card.meta.prefix)}]</strong>`);
+            }
+            if (card.meta.editUrl) {
+                $cardActions.append(genAction('fas fa-edit', 'Edit', card.meta.editUrl));
+            }
+            if (card.meta.viewUrl) {
+                $cardActions.append(genAction('fas fa-eye', 'View', card.meta.viewUrl));
+            }
+            // append default actions - probably should also be context sensitive
+            $cardActions.append(genAction('fas fa-check text-success', 'Accept', null, `<span class="text-success">${'Accept'}</span>`));
+            $cardActions.append(genAction('fas fa-times text-danger', 'Decline'));
+            $cardActions.append(genAction('fas fa-ellipsis-v', 'More...'));
+        }
+        $title.append(' ' + _.escape(card.title));
+        if ($cardActions.length) {
+            $title.append($cardActions);
+        }
+        card.title = $title[0].outerHTML;
+        // tags
+        const $cardTags = $('<div class="card-tags"></div>');
+        if (card.meta) {
+            if (card.meta.dueDate) {
+                const dateStr = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(card.meta.dueDate);
+                $cardTags.append(`<span class="badge badge-danger" title="${_.escape('This card has a due date.')}"><i class="far fa-clock"></i> ${dateStr}</span>`);
+            }
+            if (card.meta.hasDescription) {
+                $cardTags.append(`<span class="badge badge-light text-muted" title="${_.escape('This card has a description.')}"><i class="fas fa-align-left"></i></span>`);
+            }
+            if (card.meta.isWatching) {
+                $cardTags.append(`<span class="badge badge-light text-muted" title="${_.escape('You are watching this card for changes.')}"><i class="fas fa-eye"></i></span>`);
+            }
+            if (card.meta.hasComments) {
+                $cardTags.append(`<span class="badge badge-light text-muted" title="${_.escape('This card has comments.')}"><i class="fas fa-comment"></i></span>`);
+            }
+            if (card.meta.tags && card.meta.tags.length) {
+                const tagsToDisplay = 2;
+                for (let i = 0; i < card.meta.tags.length && i < tagsToDisplay; i++) {
+                    const $tag = $(`<span class="badge badge-secondary"></span>`);
+                    $tag.text(card.meta.tags[i]);
+                    $cardTags.append($tag);
+                }
+                if (card.meta.tags.length > tagsToDisplay) {
+                    const extraTags = card.meta.tags.length - tagsToDisplay;
+                    const $extraTags = $(`<span class="text-muted">+${extraTags} more</span>`);
+                    $cardTags.append($extraTags);
+                }
+            }
+        }
+        if ($cardTags[0].hasChildNodes()) {
+            card.title += $cardTags[0].outerHTML;
+        }
+        return card;
+    }
+    findCard(id) {
+        for (let l = 0; l < this.lists.length; l++) {
+            let list = this.lists[l];
+            for (let i = 0; i < list.cards.length; i++) {
+                let card = list.cards[i];
+                if (card.id === id) {
+                    return card;
+                }
+            }
+        }
+        return undefined;
+    }
+    initKanban(boards, jKanbanElemSelector) {
+        let isDraggingCard = false;
+        let kanban = new jKanban({
+            element: jKanbanElemSelector,
+            gutter: '5px',
+            widthBoard: '320px',
+            dragBoards: false,
+            click: (el) => {
+                this.listApi
+                    .getCard(el.dataset.eid)
+                    .then(this.openCardModal.bind(this));
+            },
+            dragEl: function (el) {
+                $(el).addClass('dragging');
+                isDraggingCard = true;
+            },
+            dragendEl: function (el) {
+                $(el).removeClass('dragging');
+                isDraggingCard = false;
+            },
+            dropEl: (el) => {
+                const $el = $(el);
+                $el.closest('.kanban-drag')[0]._ps.update();
+                const card = this.findCard(el.dataset.eid);
+                let prevCardOrder = null;
+                const prevCard = $el.prev('.kanban-item')[0];
+                if (prevCard) {
+                    prevCardOrder = this.findCard(prevCard.dataset.eid).order;
+                }
+                let nextCardOrder = null;
+                const nextCard = $el.next('.kanban-item')[0];
+                if (nextCard) {
+                    nextCardOrder = this.findCard(nextCard.dataset.eid).order;
+                }
+                card.order = FakeListAPI.genCardOrder(prevCardOrder, nextCardOrder);
+            },
+            addItemButton: false,
+            boards: boards,
+        });
+        // avoid propagation of card action button clicks
+        $(kanban.element).find('.card-actions .action').on('click', e => {
+            e.stopPropagation();
+        });
+        // auto-scroll list on card drag
+        $('body').on('mousemove', e => {
+            if (isDraggingCard) {
+                if (e.target.parentElement && e.target.parentElement.dataset.eid) {
+                    const cardId = e.target.parentElement.dataset.eid;
+                    const $card = $(kanban.element).find(`.kanban-item[data-eid="${cardId}"]`);
+                    const kanbanDrag = $card.closest('.kanban-drag')[0];
+                    const dragRect = kanbanDrag.getBoundingClientRect();
+                    const top = dragRect.y;
+                    const y = e.clientY;
+                    if (y < top + 20) {
+                        kanbanDrag.scrollBy(0, -20);
+                    }
+                    else if (y < top + 60) {
+                        kanbanDrag.scrollBy(0, -10);
+                    }
+                    else if (y > top + dragRect.height - 20) {
+                        kanbanDrag.scrollBy(0, 20);
+                    }
+                    else if (y > top + dragRect.height - 60) {
+                        kanbanDrag.scrollBy(0, 10);
+                    }
+                }
+            }
+        });
+        // auto-resize scrollbars on list resize
+        const ro = new ResizeObserver(entries => {
+            // TODO: throttle this
+            for (let entry of entries) {
+                entry.target._ps.update();
+            }
+        });
+        $('.kanban-drag').each((i, el) => {
+            el._ps = new PerfectScrollbar(el, { useBothWheelAxes: true });
+            ro.observe(el);
+        });
+        $('.kanban-board > footer').append(`<a href="#"><i class="fas fa-plus small"></i> Add another card</a>`);
+        // TODO: add card button - needs functionality, styling and multiple positions
+        $('.kanban-board > footer a').on('click', e => {
+            e.preventDefault();
+            const $board = $(e.target).closest('.kanban-board');
+            const $drag = $board.find('.kanban-drag');
+            $drag.append(`
+<div class="kanban-item">
+  <form>
+    <textarea name="title" style="width: 100%;border: none;outline: none; resize: none; padding: 0;"></textarea>
+  </form>
+</div>
+`);
+        });
+        return kanban;
+    }
+    setupUI(kanbanTest) {
+        // todo
+    }
+    /* TODO: creates and opens a modal dialog for the full card object */
+    openCardModal(card) {
+        console.warn('Stub(openCardModal): ' + 'Dialog is unimplemented!'); // debug
+        // prepare modal dom
+        $('#cardModalTitle').text(card.title);
+        $('#debug-modal-model').text(JSON.stringify(card, null, 2));
+        // open modal
+        const options = {};
+        $('#cardModal').modal(options);
+    }
+}
+new Demo().run();
+//# sourceURL=pen.js
+    </script>
+
+  
+
+</body>
+
+</html>
+ 
